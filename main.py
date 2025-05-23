@@ -7,7 +7,7 @@ from sqlalchemy.future import select
 
 from database import engine, session
 from models import Base, Recipe
-from schemas import RecipeInfoOut, RecipesOut, RecipeIn
+from schemas import RecipeIn, RecipeInfoOut, RecipesOut
 
 
 @asynccontextmanager
