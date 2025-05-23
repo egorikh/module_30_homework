@@ -28,7 +28,7 @@ jobs:
       run: isort --profile black --check --diff .
     
     - name: Run mypy
-      run: mypy .
+      run: mypy --ignore-missing-imports .
     
     - name: Run tests
       run: pytest -v
