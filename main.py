@@ -6,8 +6,8 @@ from sqlalchemy import asc, desc
 from sqlalchemy.future import select
 
 from database import engine, session
-from models import Base, Recipe, RecipeIn
-from schemas import RecipeInfoOut, RecipesOut
+from models import Base, Recipe
+from schemas import RecipeInfoOut, RecipesOut, RecipeIn
 
 
 @asynccontextmanager
