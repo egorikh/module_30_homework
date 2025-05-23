@@ -7,7 +7,7 @@ from sqlalchemy.future import select
 
 from database import engine, session
 from models import Base, Recipe, RecipeIn
-from schemas import RecipesOut, RecipeInfoOut
+from schemas import RecipeInfoOut, RecipesOut
 
 
 @asynccontextmanager
@@ -50,9 +50,7 @@ async def get_recipes():
             - Возрастанию времени приготовления (time_to_cook_in_min ASC).
     """
     res = await session.execute(
-        select(Recipe).order_by(
-            desc(Recipe.views), asc(Recipe.time_to_cook_in_min)
-        )
+        select(Recipe).order_by(desc(Recipe.views), asc(Recipe.time_to_cook_in_min))
     )
     return res.scalars().all()
 
@@ -76,9 +74,7 @@ async def get_recipe_info(recipe_id):
     Returns:
         RecipeInfoOut: Полная информация о рецепте.
     """
-    result = await session.execute(
-        select(Recipe).where(Recipe.id == recipe_id)
-    )
+    result = await session.execute(select(Recipe).where(Recipe.id == recipe_id))
     recipe = result.scalars().first()
     if not recipe:
         raise HTTPException(status_code=404, detail="Recipe not found")
