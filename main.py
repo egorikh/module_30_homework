@@ -1,10 +1,11 @@
 from contextlib import asynccontextmanager
 from typing import List
 
-from database import engine, session
 from fastapi import FastAPI, HTTPException
 from sqlalchemy import asc, desc
 from sqlalchemy.future import select
+
+from database import engine, session
 
 
 @asynccontextmanager
