@@ -25,7 +25,7 @@ jobs:
       run: black --check --diff .
     
     - name: Run isort
-      run: isort --check --diff .
+      run: isort --profile black --check --diff .
     
     - name: Run mypy
       run: mypy .
