@@ -1,6 +1,5 @@
-from sqlalchemy import Column, String, Integer, Text
-
 from database import Base
+from sqlalchemy import Column, Integer, String, Text
 
 
 class Recipe(Base):
@@ -14,7 +13,8 @@ class Recipe(Base):
         ingredients (str): Список ингредиентов (строка).
         description (str): Подробное описание рецепта (текст).
     """
-    __tablename__ = 'recipes'
+
+    __tablename__ = "recipes"
     id = Column(Integer, index=True, primary_key=True)
     recipe_name = Column(String, index=True)
     views = Column(Integer, default=0)
