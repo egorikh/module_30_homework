@@ -8,12 +8,14 @@ class BaseRecipe(BaseModel):
         recipe_name (str): Название рецепта.
         time_to_cook_in_min (int): Время приготовления (мин).
     """
+
     recipe_name: str = Field(..., min_length=1)
     time_to_cook_in_min: int = Field(..., gt=0)
 
 
 class RecipeIn(BaseRecipe):
     """Схема для создания рецепта (входные данные)."""
+
     ingredients: str = Field(..., min_length=1)
     description: str = Field(..., min_length=1)
 
@@ -24,6 +26,7 @@ class RecipesOut(BaseRecipe):
     Attributes:
         views (int): Количество просмотров.
     """
+
     id: int
     views: int
 
@@ -38,6 +41,7 @@ class RecipeInfoOut(BaseRecipe):
         ingredients (str): Список ингредиентов.
         description (str): Описание рецепта.
     """
+
     id: int
     views: int
     ingredients: str
