@@ -5,8 +5,6 @@ from sqlalchemy import desc, asc
 from sqlalchemy.future import select
 from database import engine, session
 
-from module_26_fastapi.homework import schemas, models
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
