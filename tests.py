@@ -1,10 +1,9 @@
 import pytest
+from database import Base
 from fastapi.testclient import TestClient
+from main import app
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
-from database import Base
-from main import app
 
 TEST_DATABASE_URL = "sqlite:///./test.db"
 
@@ -39,7 +38,7 @@ TEST_RECIPE = {
     "recipe_name": "Тестовый рецепт",
     "time_to_cook_in_min": 30,
     "ingredients": "тест1, тест2",
-    "description": "Тестовое описание"
+    "description": "Тестовое описание",
 }
 
 
@@ -94,7 +93,7 @@ class TestRecipesAPI:
             "recipe_name": "",
             "time_to_cook_in_min": -5,
             "ingredients": "",
-            "description": ""
+            "description": "",
         }
         response = test_client.post("/recipes", json=invalid_data)
         assert response.status_code == 422
