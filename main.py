@@ -1,6 +1,8 @@
 from typing import List
 from fastapi import FastAPI, HTTPException
-from contextlib import asynccontextmanager  # замена устаревших app.on_event('startup / shutdown')
+from contextlib import (
+    asynccontextmanager,
+)  # замена устаревших app.on_event('startup / shutdown')
 from sqlalchemy import desc, asc
 from sqlalchemy.future import select
 from database import engine, session
@@ -25,16 +27,16 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Кулинарная книга API",
     description="API для управления рецептами с сортировкой по популярности.",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 app.router.lifespan_context = lifespan
 
 
 @app.get(
-    '/recipes',
+    "/recipes",
     response_model=List[schemas.RecipesOut],
     summary="Список рецептов",
-    description="Возвращает все рецепты, отсортированные по просмотрам и времени приготовления."
+    description="Возвращает все рецепты, отсортированные по просмотрам и времени приготовления.",
 )
 async def get_recipes():
     """Получить список рецептов.
@@ -45,17 +47,18 @@ async def get_recipes():
             - Возрастанию времени приготовления (time_to_cook_in_min ASC).
     """
     res = await session.execute(
-        select(models.Recipe)
-        .order_by(desc(models.Recipe.views), asc(models.Recipe.time_to_cook_in_min))
+        select(models.Recipe).order_by(
+            desc(models.Recipe.views), asc(models.Recipe.time_to_cook_in_min)
+        )
     )
     return res.scalars().all()
 
 
 @app.get(
-    '/recipes/{recipe_id}',
+    "/recipes/{recipe_id}",
     response_model=schemas.RecipeInfoOut,
     summary="Детальная информация рецепта",
-    description="Возвращает полную информацию о рецепте и увеличивает счетчик просмотров."
+    description="Возвращает полную информацию о рецепте и увеличивает счетчик просмотров.",
 )
 async def get_recipe_info(recipe_id):
     """Получить детали рецепта по ID.
@@ -70,8 +73,7 @@ async def get_recipe_info(recipe_id):
         RecipeInfoOut: Полная информация о рецепте.
     """
     result = await session.execute(
-        select(models.Recipe)
-        .where(models.Recipe.id == recipe_id)
+        select(models.Recipe).where(models.Recipe.id == recipe_id)
     )
     recipe = result.scalars().first()
     if not recipe:
@@ -81,10 +83,10 @@ async def get_recipe_info(recipe_id):
 
 
 @app.post(
-    '/recipes',
+    "/recipes",
     response_model=schemas.RecipeInfoOut,
     summary="Создать рецепт",
-    description="Добавляет новый рецепт в базу данных."
+    description="Добавляет новый рецепт в базу данных.",
 )
 async def create_recipe(recipe: schemas.RecipeIn):
     """Создать новый рецепт.
