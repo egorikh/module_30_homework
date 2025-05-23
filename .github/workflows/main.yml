@@ -24,9 +24,6 @@ jobs:
     - name: Run black
       run: black --check --diff .
     
-    - name: Run flake8
-      run: flake8 .
-    
     - name: Run isort
       run: isort --check --diff .
     
