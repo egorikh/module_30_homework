@@ -1,11 +1,10 @@
+from contextlib import asynccontextmanager
 from typing import List
-from fastapi import FastAPI, HTTPException
-from contextlib import (
-    asynccontextmanager,
-)  # замена устаревших app.on_event('startup / shutdown')
-from sqlalchemy import desc, asc
-from sqlalchemy.future import select
+
 from database import engine, session
+from fastapi import FastAPI, HTTPException
+from sqlalchemy import asc, desc
+from sqlalchemy.future import select
 
 
 @asynccontextmanager
@@ -36,7 +35,8 @@ app.router.lifespan_context = lifespan
     "/recipes",
     response_model=List[schemas.RecipesOut],
     summary="Список рецептов",
-    description="Возвращает все рецепты, отсортированные по просмотрам и времени приготовления.",
+    description="Возвращает все рецепты, "
+    "отсортированные по просмотрам и времени приготовления.",
 )
 async def get_recipes():
     """Получить список рецептов.
@@ -58,7 +58,8 @@ async def get_recipes():
     "/recipes/{recipe_id}",
     response_model=schemas.RecipeInfoOut,
     summary="Детальная информация рецепта",
-    description="Возвращает полную информацию о рецепте и увеличивает счетчик просмотров.",
+    description="Возвращает полную информацию о рецепте и "
+    "увеличивает счетчик просмотров.",
 )
 async def get_recipe_info(recipe_id):
     """Получить детали рецепта по ID.
@@ -92,7 +93,8 @@ async def create_recipe(recipe: schemas.RecipeIn):
     """Создать новый рецепт.
 
     Args:
-        recipe (RecipeIn): Данные рецепта (название, время, ингредиенты, описание).
+        recipe (RecipeIn): Данные рецепта (название, время,
+        ингредиенты, описание).
 
     Returns:
         RecipeInfoOut: Созданный рецепт (включая присвоенный ID).
