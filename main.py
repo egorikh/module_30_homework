@@ -6,6 +6,8 @@ from sqlalchemy import asc, desc
 from sqlalchemy.future import select
 
 from database import engine, session
+from models import Base, Recipe, RecipeIn
+from schemas import RecipesOut, RecipeInfoOut
 
 
 @asynccontextmanager
@@ -16,7 +18,7 @@ async def lifespan(app: FastAPI):
     - Закрывает соединения при завершении.
     """
     async with engine.begin() as conn:
-        await conn.run_sync(models.Base.metadata.create_all)
+        await conn.run_sync(Base.metadata.create_all)
 
     yield
 
@@ -34,7 +36,7 @@ app.router.lifespan_context = lifespan
 
 @app.get(
     "/recipes",
-    response_model=List[schemas.RecipesOut],
+    response_model=List[RecipesOut],
     summary="Список рецептов",
     description="Возвращает все рецепты, "
     "отсортированные по просмотрам и времени приготовления.",
@@ -48,8 +50,8 @@ async def get_recipes():
             - Возрастанию времени приготовления (time_to_cook_in_min ASC).
     """
     res = await session.execute(
-        select(models.Recipe).order_by(
-            desc(models.Recipe.views), asc(models.Recipe.time_to_cook_in_min)
+        select(Recipe).order_by(
+            desc(Recipe.views), asc(Recipe.time_to_cook_in_min)
         )
     )
     return res.scalars().all()
@@ -57,7 +59,7 @@ async def get_recipes():
 
 @app.get(
     "/recipes/{recipe_id}",
-    response_model=schemas.RecipeInfoOut,
+    response_model=RecipeInfoOut,
     summary="Детальная информация рецепта",
     description="Возвращает полную информацию о рецепте и "
     "увеличивает счетчик просмотров.",
@@ -75,7 +77,7 @@ async def get_recipe_info(recipe_id):
         RecipeInfoOut: Полная информация о рецепте.
     """
     result = await session.execute(
-        select(models.Recipe).where(models.Recipe.id == recipe_id)
+        select(Recipe).where(Recipe.id == recipe_id)
     )
     recipe = result.scalars().first()
     if not recipe:
@@ -86,11 +88,11 @@ async def get_recipe_info(recipe_id):
 
 @app.post(
     "/recipes",
-    response_model=schemas.RecipeInfoOut,
+    response_model=RecipeInfoOut,
     summary="Создать рецепт",
     description="Добавляет новый рецепт в базу данных.",
 )
-async def create_recipe(recipe: schemas.RecipeIn):
+async def create_recipe(recipe: RecipeIn):
     """Создать новый рецепт.
 
     Args:
@@ -100,7 +102,7 @@ async def create_recipe(recipe: schemas.RecipeIn):
     Returns:
         RecipeInfoOut: Созданный рецепт (включая присвоенный ID).
     """
-    new_recipe = models.Recipe(**recipe.model_dump())
+    new_recipe = Recipe(**recipe.model_dump())
     async with session.begin():
         session.add(new_recipe)
     await session.refresh(new_recipe)
